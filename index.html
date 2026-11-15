@@ -1,0 +1,342 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Rainwater Harvesting Monitor</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #eef6fb;
+    color: #183247;
+}
+
+header {
+    background: #087eaa;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+header p {
+    margin-top: 8px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 15px;
+}
+
+h2 {
+    margin-bottom: 18px;
+    color: #087eaa;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #00000012;
+}
+
+.card h3 {
+    font-size: 15px;
+    color: #607d8b;
+    margin-bottom: 12px;
+}
+
+.value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #087eaa;
+}
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px #00000012;
+}
+
+input {
+    width: 100%;
+    padding: 11px;
+    margin: 8px 0 16px;
+    border: 1px solid #b7cbd5;
+    border-radius: 7px;
+}
+
+button {
+    background: #087eaa;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+button:hover {
+    background: #056487;
+}
+
+.tank {
+    width: 170px;
+    height: 220px;
+    border: 5px solid #087eaa;
+    border-radius: 12px;
+    margin: 20px auto;
+    position: relative;
+    overflow: hidden;
+    background: #f5fbff;
+}
+
+.water {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60%;
+    background: #27a9df;
+    transition: height 0.5s;
+}
+
+.tank-label {
+    text-align: center;
+    font-weight: bold;
+}
+
+#alert {
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 7px;
+    background: #e6f5e9;
+    color: #236b36;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #e3f3fa;
+}
+
+footer {
+    text-align: center;
+    padding: 22px;
+    background: #087eaa;
+    color: white;
+    margin-top: 30px;
+}
+
+.note {
+    color: #607d8b;
+    font-size: 13px;
+    margin-top: 12px;
+}
+
+@media(max-width: 600px) {
+    .container {
+        padding: 12px;
+    }
+    .panel {
+        padding: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Smart Rainwater Harvesting System</h1>
+    <p>IoT-Based Water Monitoring and Management Dashboard</p>
+</header>
+
+<div class="container">
+
+    <h2>Dashboard Overview</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Rainfall</h3>
+            <div class="value"><span id="rain">35</span> mm</div>
+        </div>
+
+        <div class="card">
+            <h3>Stored Water</h3>
+            <div class="value"><span id="stored">6000</span> L</div>
+        </div>
+
+        <div class="card">
+            <h3>Tank Capacity</h3>
+            <div class="value"><span id="capacity">10000</span> L</div>
+        </div>
+
+        <div class="card">
+            <h3>Daily Water Usage</h3>
+            <div class="value"><span id="usage">500</span> L</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Water Tank Monitoring</h2>
+        <div class="tank">
+            <div class="water" id="water"></div>
+        </div>
+        <p class="tank-label">
+            Tank Level: <span id="level">60</span>%
+        </p>
+        <div id="alert">Tank status: Normal</div>
+    </div>
+
+    <div class="panel">
+        <h2>Update Sensor Readings</h2>
+
+        <label>Rainfall (mm)</label>
+        <input type="number" id="rainInput" value="35" min="0">
+
+        <label>Tank Level (%)</label>
+        <input type="number" id="levelInput" value="60" min="0" max="100">
+
+        <label>Tank Capacity (Litres)</label>
+        <input type="number" id="capacityInput" value="10000" min="1">
+
+        <label>Daily Water Usage (Litres)</label>
+        <input type="number" id="usageInput" value="500" min="0">
+
+        <button onclick="updateDashboard()">Update Dashboard</button>
+        <button onclick="resetData()">Reset Sample Data</button>
+
+        <p class="note">
+            Enter sample sensor readings to see how the dashboard responds.
+        </p>
+    </div>
+
+    <div class="panel">
+        <h2>Environmental Benefits</h2>
+        <table>
+            <tr>
+                <th>Benefit</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Water Conservation</td>
+                <td>Helps collect and store rainwater for future use.</td>
+            </tr>
+            <tr>
+                <td>Groundwater Protection</td>
+                <td>Reduces dependency on groundwater sources.</td>
+            </tr>
+            <tr>
+                <td>Prevents Water Wastage</td>
+                <td>Alerts users when the tank is nearly full.</td>
+            </tr>
+            <tr>
+                <td>Efficient Management</td>
+                <td>Displays water storage and usage information.</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="panel">
+        <h2>How the System Works</h2>
+        <p><b>Input:</b> Rainfall sensor, water-level sensor and flow sensor readings.</p>
+        <br>
+        <p><b>Processing:</b> The system calculates stored water and checks tank level.</p>
+        <br>
+        <p><b>Output:</b> Dashboard displays water information and warning alerts.</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>Smart Rainwater Harvesting Monitoring System</p>
+    <p>Environmental Studies and E-Waste Management | BCS508</p>
+</footer>
+
+<script>
+function updateDashboard() {
+    let rainfall = Number(document.getElementById("rainInput").value);
+    let level = Number(document.getElementById("levelInput").value);
+    let capacity = Number(document.getElementById("capacityInput").value);
+    let usage = Number(document.getElementById("usageInput").value);
+
+    if (
+        !Number.isFinite(rainfall) ||
+        !Number.isFinite(level) ||
+        !Number.isFinite(capacity) ||
+        !Number.isFinite(usage) ||
+        rainfall < 0 ||
+        level < 0 || level > 100 ||
+        capacity <= 0 ||
+        usage < 0
+    ) {
+        alert("Please enter valid values.");
+        return;
+    }
+
+    let stored = Math.round(capacity * level / 100);
+
+    document.getElementById("rain").textContent = rainfall;
+    document.getElementById("level").textContent = level;
+    document.getElementById("capacity").textContent = capacity;
+    document.getElementById("stored").textContent = stored.toLocaleString("en-IN");
+    document.getElementById("usage").textContent = usage.toLocaleString("en-IN");
+
+    document.getElementById("water").style.height = level + "%";
+
+    let alertBox = document.getElementById("alert");
+
+    if (level >= 90) {
+        alertBox.textContent = "Warning: Tank is almost full! Check for overflow.";
+        alertBox.style.background = "#fff0d9";
+        alertBox.style.color = "#965500";
+    } else if (level <= 20) {
+        alertBox.textContent = "Warning: Water level is low. Use water carefully.";
+        alertBox.style.background = "#fde8e8";
+        alertBox.style.color = "#a52a2a";
+    } else {
+        alertBox.textContent = "Tank status: Normal. Water level is suitable.";
+        alertBox.style.background = "#e6f5e9";
+        alertBox.style.color = "#236b36";
+    }
+}
+
+function resetData() {
+    document.getElementById("rainInput").value = 35;
+    document.getElementById("levelInput").value = 60;
+    document.getElementById("capacityInput").value = 10000;
+    document.getElementById("usageInput").value = 500;
+    updateDashboard();
+}
+
+updateDashboard();
+</script>
+
+</body>
+</html>
